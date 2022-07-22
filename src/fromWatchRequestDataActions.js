@@ -12,7 +12,7 @@ import handleTimeoutError from './errors/handleTimeoutError'
 import handleServerError from './errors/handleServerError'
 
 export const fromWatchRequestDataActions = configWithoutDefaultValues =>
-  function* fetchToSuccessOrFailData(action) {
+  (function* fetchToSuccessOrFailData(action) {
     const config = getConfigWithDefaultValues(
       Object.assign({}, configWithoutDefaultValues, action.config)
     )
@@ -26,7 +26,11 @@ export const fromWatchRequestDataActions = configWithoutDefaultValues =>
       let delayed
       let payload
       if (timeout) {
-        const result = yield race({
+        const result = yield /* TODO: JSFIX could not patch the breaking change:
+        now race should be finished if any of effects resolved with END (by analogy with all)
+
+        Suggested fix: Only relevant if any of the raced effects resolve with an END value. In most scenarios, this change can be ignored.*/
+        race({
           delayed: delay(timeout),
           payload: call(fetchDataMethod, url, config),
         })
@@ -55,6 +59,6 @@ export const fromWatchRequestDataActions = configWithoutDefaultValues =>
     } catch (error) {
       yield call(handleServerError, error, config)
     }
-  }
+  })
 
 export default fromWatchRequestDataActions

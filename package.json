@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "fetch-normalize-data": "1.8.6",
-    "redux-saga": "^1.1.1"
+    "redux-saga": "^1.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.0.1",
